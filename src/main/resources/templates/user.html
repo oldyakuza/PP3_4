@@ -1,11 +1,61 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <title>User's page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
 
-
+    <header>
+        <div th:insert="topBarForm"/>
+    </header>
+    <main>
+        <div class="row">
+            <div class="col-md-2 py-3 min-vh-100 bg-white">
+                <div th:insert="leftPanelForm"/>
+            </div>
+            <div class="col-md-10 py-3 min-vh-100 bg-light">
+                <div class="tab-pane fade show active" id="userInfoTab" role="tabpanel" aria-labelledby="rightPanel">
+                    <h2 class="my-0 py-3 font-weight-normal">User information page</h2>
+                    <div class="card-deck mb-3 text-left">
+                        <div class="card mb-4 box-shadow">
+                            <div class="card-header">
+                                <h3 class="my-0 font-weight-normal">About user</h3>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">First Name</th>
+                                        <th scope="col">Last Name</th>
+                                        <th scope="col">Age</th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Role</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td th:text="${currentUser.getId()}"/>
+                                        <td th:text="${currentUser.getFirstName()}"/>
+                                        <td th:text="${currentUser.getLastName()}"/>
+                                        <td th:text="${currentUser.getAge()}"/>
+                                        <td th:text="${currentUser.getUsername()}"/>
+                                        <td th:each="role : ${currentUser.getRoles()}"
+                                             th:text="${role.toString()}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

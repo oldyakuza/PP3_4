@@ -1,0 +1,10 @@
+<div th:fragment="leftPanel">
+  <div class="nav flex-column nav-pills" id="leftPanel" role="tablist" aria-orientation="vertical">
+    <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:class="'nav-link' + ${#authorization.expression('hasRole(''ADMIN'')') ? ' active' : ''}"
+       id="adminTab" data-toggle="tab" href="#adminPanel" role="tab" aria-controls="rightPanel"
+       aria-selected="true">Admin              </a>
+    <a th:if="${#authorization.expression('hasRole(''USER'')')}" th:class="'nav-link' + ${#authorization.expression('hasRole(''ADMIN'')') ? '' : ' active'}"
+       id="userInfoTab" data-toggle="tab" href="#userInfoPanel" role="tab"
+       aria-controls="rightPanel" aria-selected="false">User                  </a>
+  </div>
+</div>
