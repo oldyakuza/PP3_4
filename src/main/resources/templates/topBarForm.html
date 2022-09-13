@@ -1,10 +1,9 @@
 <nav th:fragment="topBar" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <div class="collapse navbar-collapse">
-            <a class="navbar-brand text-white font-weight-bold" th:text="${currentUser.getUsername()}"></a>
+        <div class="collapse navbar-collapse" id="user">
+            <a class="navbar-brand text-white font-weight-bold" id="topBarUsername"></a>
             <a class="navbar-brand text-white">with roles: </a>
-            <a class="navbar-brand text-white" th:each="role : ${currentUser.getRoles()}"
-               th:text="${role.toString()}"></a>
+            <a class="navbar-brand text-white" id="topBarRoles"></a>
         </div>
         <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav">

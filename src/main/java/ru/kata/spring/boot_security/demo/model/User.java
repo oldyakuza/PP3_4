@@ -1,7 +1,9 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,11 +13,11 @@ import java.util.*;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
+@EqualsAndHashCode(exclude = "roles")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(name = "first_name")
     private String firstName;
@@ -23,7 +25,7 @@ public class User implements UserDetails {
     private String lastName;
     @Column(name = "age")
     private byte age;
-    @Column(name = "username")
+    @Column(name = "email")
     private String username;
     @Column(name = "password")
     private String password;
@@ -33,10 +35,14 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
-    public void addRole(Role role) {
-        getRoles().add(role);
+    public User(String firstName, String lastName, byte age, String username, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.username = username;
+        this.password = password;
     }
 
     @Override
@@ -62,5 +68,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age='" + age + '\'' +
+                ", email='" + username + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

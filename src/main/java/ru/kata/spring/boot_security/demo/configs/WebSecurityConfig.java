@@ -9,11 +9,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
     private final UserService userService;
     private final SuccessUserHandler successUserHandler;
 
@@ -27,10 +28,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(daoAuthenticationProvider());
-    }
 
     @Bean
     public AuthenticationProvider daoAuthenticationProvider() throws Exception {
@@ -41,24 +38,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return provider;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf()
-                    .disable()
+                .csrf().disable().antMatcher("/**")
                 .authorizeRequests()
-                    .antMatchers("/admin").hasRole("ADMIN")
-                    .antMatchers("/user").hasRole("USER")
-                    .antMatchers("/login").permitAll()
+                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/user").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/", "/login/**").permitAll()
                 .anyRequest().authenticated()
+
                 .and()
-                    .formLogin()
-                    .successHandler(successUserHandler)
-                    .permitAll()
+                .formLogin().permitAll().successHandler(successUserHandler)
                 .and()
-                    .logout()
-                    .permitAll()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login");
+                .logout()
+                .logoutSuccessUrl("/login")
+                .permitAll()
+                .and()
+                .httpBasic();
+        return http.build();
     }
 }
